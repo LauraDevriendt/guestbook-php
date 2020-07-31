@@ -1,31 +1,9 @@
 <?php
-class PostLoader{
-    private array $posts=[];
 
-
-    public function setPosts(array $posts): void
-    {
-        $this->posts = $posts;
-    }
-
-    public function addPosts(Post $post){
-        $this->posts[]=$post;
-    }
-
-    /**
-     * @return Post[]
-     */
-    public function getPosts(): array
-    {
-        return $this->posts;
-    }
-}
 class Post implements JsonSerializable{
     private string $title;
     private string $author;
     private DateTime $date;
-    private string $content;
-
 
     public function __construct(string $title, string $author, string $content)
     {
@@ -37,16 +15,34 @@ class Post implements JsonSerializable{
 
     }
 
-
-   /* public function __unserialize(array $data): void
+    public function setDate(DateTime $date): void
     {
-        $this->title = $data['title'];
-        $this->author = $data['author'];
-        $this->date = $data['date'];
-        $this->content = $data['content'];
+        $this->date = $date;
+    }
+    private string $content;
 
-        // @todo check this on manual $this->connect();
-    }*/
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+
+    public function getAuthor(): string
+    {
+        return $this->author;
+    }
+
+    public function getDate(): DateTime
+    {
+        return $this->date;
+    }
+
+
+    public function getContent(): string
+    {
+        return $this->content;
+    }
 
 
     public function jsonSerialize():array
@@ -57,5 +53,15 @@ class Post implements JsonSerializable{
             'date' =>$this->date,
             'content'=> $this->content
         ];
+    }
+
+    public function displayPost():string{
+        return "<div class='card col-3 mr-2 mb-2'>
+                    <div class='card-body'>
+                        <h4 class='card-title''>{$this->getTitle()}</h4>
+                        <h6 class='card-subtitle mb-2 text-muted'>{$this->getAuthor()} on {$this->getDate()->format('D M d H:ia')}</h6>
+                        <p class='card-text'>{$this->getAuthor()}</p>
+                    </div>
+                  </div>";
     }
 }

@@ -3,40 +3,23 @@ declare(strict_types=1);
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
-//require 'classes/PostLoader.php';
+require 'classes/PostLoader.php';
 require 'classes/Post.php';
 session_start();
+$postLoader = new PostLoader();
+$postData = $postLoader->loadDataPosts();
 
 
-try {
-    $postData=json_decode(file_get_contents('resources/posts.json'), true, 512, JSON_THROW_ON_ERROR);
-} catch (JsonException $e) {
-    throw new JsonException('failed to get content');
-}
-$postLoader=new PostLoader();
-if ($postData!=="") {
-    $postLoader->setPosts($postData);
-}
+if (isset($_POST['submit'])) {
 
-if(isset($_POST['submit'])){
-
-if (empty($_POST['authorName']) || empty($_POST['title']) || empty($_POST['message'])) {
-    throw new Exception('not everything is filled in');
-}
-$post = new Post(htmlspecialchars($_POST['authorName']), htmlspecialchars($_POST['title']), htmlspecialchars($_POST['message']));
-$postLoader->addPosts($post);
-    try {
-        file_put_contents('resources/posts.json', json_encode($postLoader->getPosts(), JSON_THROW_ON_ERROR));
-    } catch (JsonException $e) {
-        throw new JsonException('failed to put in content');
+    if (empty($_POST['authorName']) || empty($_POST['title']) || empty($_POST['message'])) {
+        throw new Exception('not everything is filled in');
     }
+    $post = new Post(htmlspecialchars($_POST['authorName']), htmlspecialchars($_POST['title']), htmlspecialchars($_POST['message']));
+    $postLoader->addPosts($post);
+    $postLoader->storeDataPosts();
 
 }
-
-
-
-
-
 
 ?>
 
@@ -48,12 +31,13 @@ $postLoader->addPosts($post);
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
     <title>Guestbook</title>
 </head>
 <body>
 <h1 class="my-5 text-center">GuestBook</h1>
-<section class="container">
+<section id="createPost" class="container">
     <form method="post">
         <div class="form-group">
             <label class="" for="authorName">Name: </label>
@@ -73,6 +57,22 @@ $postLoader->addPosts($post);
         </div>
     </form>
 </section>
+<section id="displayPosts">
 
+    <div class="container">
+        <form>
+            <input type="number" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" value="20">
+            <div class="input-group-append">
+                <button class="btn btn-success" type="button">Love it</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <?php if (!empty($postData)) echo $postLoader->displayPosts(); ?>
+        </div>
+    </div>
+</section>
 </body>
 </html>
