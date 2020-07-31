@@ -60,7 +60,7 @@ class Post implements JsonSerializable{
                     <div class='card-body'>
                         <h4 class='card-title''>{$this->getTitle()}</h4>
                         <h6 class='card-subtitle mb-2 text-muted'>{$this->getAuthor()} on {$this->getDate()->format('D M d H:ia')}</h6>
-                        <p class='card-text'>{$this->getAuthor()}</p>
+                        <p class='card-text'>{$this->getContent()}</p>
                     </div>
                   </div>";
     }

@@ -1,11 +1,29 @@
 <?php
 class PostLoader{
+    private array $badWords=['shit','fuck'];
     const RESOURCES_POSTS_JSON = 'resources/posts.json';
 
     /**
      * @var Post[]
      */
     private array $posts=[];
+
+    /**
+     * PostLoader constructor.
+     * @param Post[] $posts
+     */
+    public function __construct()
+    {
+        try {
+            $postData = json_decode(file_get_contents(self::RESOURCES_POSTS_JSON), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $postData="";
+        }
+        if (!empty($postData)) {
+            $this->setPosts($postData);
+        }
+
+    }
 
 
     public function setPosts(array $postData): void
@@ -21,8 +39,15 @@ class PostLoader{
     }
 
     public function addPosts(Post $post){
+        foreach ($this->badWords as $word){
+            if(strpos($post->getContent(),$word)!==false){
+                throw new Exception("Following word '{$word}' is not allowed! Your post will not be included");
+            }
+        }
+
         $this->posts[]=$post;
     }
+
 
     /**
      * @return Post[]
@@ -32,25 +57,13 @@ class PostLoader{
         return $this->posts;
     }
 
-    public function loadDataPosts(){
-
-        try {
-            $postData = json_decode(file_get_contents(self::RESOURCES_POSTS_JSON), true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            $postData="";
-        }
-        if (!empty($postData)) {
-            $this->setPosts($postData);
-        }
-        return $postData;
-    }
-
     public function storeDataPosts(){
         try {
             file_put_contents(self::RESOURCES_POSTS_JSON, json_encode($this->getPosts(), JSON_THROW_ON_ERROR));
         } catch (JsonException $e) {
             throw new JsonException('failed to put in content');
         }
+
     }
 
     public function displayPosts($numberOfPosts=20):string{
@@ -64,6 +77,7 @@ class PostLoader{
         }
         return $display;
     }
+
 
 
 }

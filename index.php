@@ -3,12 +3,13 @@ declare(strict_types=1);
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
+
 require 'classes/PostLoader.php';
 require 'classes/Post.php';
-session_start();
-$postLoader = new PostLoader();
-$postData = $postLoader->loadDataPosts();
 
+session_start();
+
+$postLoader = new PostLoader();
 
 if (isset($_POST['submit'])) {
 
@@ -75,7 +76,7 @@ if (isset($_POST['submit'])) {
         <div class="row mx-auto">
             <?php
          $displayNumber= (isset($_POST['displayNumber'])) ? htmlspecialchars($_POST['displayNumber']) : "20";
-            if (!empty($postData)) echo $postLoader->displayPosts((int)$displayNumber);
+            if (!empty($postLoader->getPosts())) echo $postLoader->displayPosts((int)$displayNumber);
 
             ?>
         </div>
