@@ -60,17 +60,24 @@ if (isset($_POST['submit'])) {
 <section id="displayPosts">
 
     <div class="container">
-        <form>
-            <input type="number" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" value="20">
-            <div class="input-group-append">
-                <button class="btn btn-success" type="button">Love it</button>
+        <form method="post" class="w-30 my-2">
+            <div class="input-group">
+                <input type="number" name="displayNumber" class="form-control" placeholder="" aria-label=""
+                       aria-describedby="basic-addon1" value="<?php echo (isset($_POST['displayNumber'])) ? htmlspecialchars($_POST['displayNumber']) : "20";?>">
+                <div class="input-group-append">
+                    <button class="btn btn-success" name="displayNumberSubmit" type="button">set Display</button>
+                </div>
             </div>
         </form>
     </div>
 
     <div class="container">
-        <div class="row">
-            <?php if (!empty($postData)) echo $postLoader->displayPosts(); ?>
+        <div class="row mx-auto">
+            <?php
+         $displayNumber= (isset($_POST['displayNumber'])) ? htmlspecialchars($_POST['displayNumber']) : "20";
+            if (!empty($postData)) echo $postLoader->displayPosts((int)$displayNumber);
+
+            ?>
         </div>
     </div>
 </section>
