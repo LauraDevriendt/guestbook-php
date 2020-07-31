@@ -8,7 +8,7 @@ class Post implements JsonSerializable{
     private array $emojis = [
         ':-)' => '&#128512;',
         ';-)' => '&#128521;',
-        'fi' => '&#128543;'
+        ':-(' => '&#128543;'
     ];
 
     public function __construct(string $title, string $author, string $content)
