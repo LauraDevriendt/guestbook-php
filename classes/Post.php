@@ -4,6 +4,11 @@ class Post implements JsonSerializable{
     private string $title;
     private string $author;
     private DateTime $date;
+    private array $emojis = [
+        ':-)' => '&#128512;',
+        ';-)' => '&#128521;',
+        ':-(' => '&#128543;'
+    ];
 
     public function __construct(string $title, string $author, string $content)
     {
@@ -13,6 +18,14 @@ class Post implements JsonSerializable{
         $this->content = $content;
 
 
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
     }
 
     public function setDate(DateTime $date): void
@@ -56,6 +69,11 @@ class Post implements JsonSerializable{
     }
 
     public function displayPost():string{
+
+        foreach ($this->emojis as $key => $emoji){
+            $this->setContent(str_replace($key,$emoji,$this->content));
+        }
+
         return "<div class='card col-3 mr-2 mb-2'>
                     <div class='card-body'>
                         <h4 class='card-title''>{$this->getTitle()}</h4>
