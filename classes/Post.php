@@ -4,10 +4,11 @@ class Post implements JsonSerializable{
     private string $title;
     private string $author;
     private DateTime $date;
+    private string $content;
     private array $emojis = [
         ':-)' => '&#128512;',
         ';-)' => '&#128521;',
-        ':-(' => '&#128543;'
+        'fi' => '&#128543;'
     ];
 
     public function __construct(string $title, string $author, string $content)
@@ -19,21 +20,6 @@ class Post implements JsonSerializable{
 
 
     }
-
-    /**
-     * @param string $content
-     */
-    public function setContent(string $content): void
-    {
-        $this->content = $content;
-    }
-
-    public function setDate(DateTime $date): void
-    {
-        $this->date = $date;
-    }
-    private string $content;
-
 
     public function getTitle(): string
     {
@@ -51,12 +37,20 @@ class Post implements JsonSerializable{
         return $this->date;
     }
 
+    public function setDate(DateTime $date): void
+    {
+        $this->date = $date;
+    }
 
     public function getContent(): string
     {
         return $this->content;
     }
 
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
 
     public function jsonSerialize():array
     {
